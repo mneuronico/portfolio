@@ -422,6 +422,8 @@ let pointerDownPos = null;
 let isDragging = false;
 let isPointerOverUI = false;
 let uiFocusCount = 0;
+let activePointerId = null;
+let pointerDownTime = 0;
 
 // Camera animation
 const cameraAnim = {
@@ -889,33 +891,63 @@ function createMoonsForWorld(world3D) {
 // ============ INTERACTION ============
 
 function setupEvents() {
-  const pointerTarget = window;
+  const pointerTarget = renderer.domElement;
+
+  const setUIFocus = (enabled) => {
+    isPointerOverUI = enabled;
+    if (enabled) {
+      document.body.classList.add('ui-focus');
+    } else {
+      document.body.classList.remove('ui-focus');
+    }
+  };
 
   $$('.overlay-panel, #brands-footer').forEach(el => {
     el.addEventListener('mouseenter', () => {
       uiFocusCount += 1;
-      isPointerOverUI = true;
-      document.body.classList.add('ui-focus');
+      setUIFocus(true);
     });
     el.addEventListener('mouseleave', () => {
       uiFocusCount = Math.max(0, uiFocusCount - 1);
-      isPointerOverUI = uiFocusCount > 0;
-      if (!isPointerOverUI) {
-        document.body.classList.remove('ui-focus');
-      }
+      setUIFocus(uiFocusCount > 0);
+    });
+
+    el.addEventListener('pointerdown', () => {
+      uiFocusCount += 1;
+      setUIFocus(true);
+    });
+    el.addEventListener('pointerup', () => {
+      uiFocusCount = Math.max(0, uiFocusCount - 1);
+      setUIFocus(uiFocusCount > 0);
+    });
+    el.addEventListener('pointercancel', () => {
+      uiFocusCount = Math.max(0, uiFocusCount - 1);
+      setUIFocus(uiFocusCount > 0);
     });
   });
 
+  const setMouseFromEvent = (e) => {
+    mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+  };
+
   pointerTarget.addEventListener('pointerdown', (e) => {
     if (isPointerOverUI) return;
+    if (activePointerId !== null) return;
+    activePointerId = e.pointerId;
     pointerDownPos = { x: e.clientX, y: e.clientY };
+    pointerDownTime = performance.now();
     isDragging = false;
+    setMouseFromEvent(e);
+    updateHover();
+    if (pointerTarget.setPointerCapture) {
+      pointerTarget.setPointerCapture(e.pointerId);
+    }
   });
 
   pointerTarget.addEventListener('pointermove', (e) => {
-    // Update mouse for raycasting
-    mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
-    mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+    if (activePointerId !== e.pointerId && activePointerId !== null) return;
+    setMouseFromEvent(e);
 
     if (isPointerOverUI) {
       clearHover();
@@ -925,7 +957,8 @@ function setupEvents() {
     if (pointerDownPos) {
       const dx = e.clientX - pointerDownPos.x;
       const dy = e.clientY - pointerDownPos.y;
-      if (Math.abs(dx) > 3 || Math.abs(dy) > 3) {
+      const dragThreshold = e.pointerType === 'touch' ? 6 : 3;
+      if (Math.abs(dx) > dragThreshold || Math.abs(dy) > dragThreshold) {
         isDragging = true;
       }
       if (isDragging) {
@@ -942,16 +975,32 @@ function setupEvents() {
   });
 
   pointerTarget.addEventListener('pointerup', (e) => {
-    if (pointerDownPos && !isDragging) {
+    if (activePointerId !== e.pointerId && activePointerId !== null) return;
+    setMouseFromEvent(e);
+    const tapDuration = performance.now() - pointerDownTime;
+    if (pointerDownPos && !isDragging && tapDuration < 350) {
       handleClick();
     }
     pointerDownPos = null;
     isDragging = false;
+    activePointerId = null;
+    if (pointerTarget.releasePointerCapture) {
+      pointerTarget.releasePointerCapture(e.pointerId);
+    }
+  });
+
+  pointerTarget.addEventListener('pointercancel', () => {
+    pointerDownPos = null;
+    isDragging = false;
+    activePointerId = null;
+    mouse.set(-999, -999);
+    clearHover();
   });
 
   pointerTarget.addEventListener('pointerleave', () => {
     pointerDownPos = null;
     isDragging = false;
+    activePointerId = null;
     mouse.set(-999, -999);
     clearHover();
   });
