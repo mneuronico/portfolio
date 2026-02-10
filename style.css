@@ -209,6 +209,10 @@ body.ui-focus .overlay {
   z-index: 15;
 }
 
+body.ui-focus #scene3d {
+  pointer-events: none;
+}
+
 .overlay.active .overlay-panel,
 .brands-footer {
   pointer-events: auto;

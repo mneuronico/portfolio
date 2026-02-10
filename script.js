@@ -1005,6 +1005,25 @@ function setupEvents() {
     clearHover();
   });
 
+  window.addEventListener('pointermove', (e) => {
+    if (activePointerId !== null) return;
+    const x = e.clientX;
+    const y = e.clientY;
+    const uiElements = Array.from($$('.overlay-panel, #brands-footer'));
+    const over = uiElements.some((el) => {
+      const rect = el.getBoundingClientRect();
+      return x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
+    });
+    if (over !== isPointerOverUI) {
+      isPointerOverUI = over;
+      if (over) {
+        document.body.classList.add('ui-focus');
+      } else {
+        document.body.classList.remove('ui-focus');
+      }
+    }
+  });
+
   // Keyboard
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
