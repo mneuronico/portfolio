@@ -24,6 +24,9 @@
     </div>
   </div>
 
+  <!-- Stars Canvas -->
+  <canvas id="stars3d"></canvas>
+
   <!-- Three.js Canvas -->
   <canvas id="scene3d"></canvas>
 
@@ -41,62 +44,68 @@
 
   <!-- Main View Overlay -->
   <div id="main-overlay" class="overlay active">
-    <div class="hero-section">
-      <h1 id="hero-name">Nicolás Martorell</h1>
-      <p id="hero-tagline" class="hero-tagline">Software Engineer · Neuroscientist · Researcher · Content Creator</p>
-      <p id="hero-desc" class="hero-desc">Welcome to my portfolio universe. Each planet represents a domain of my work. Click a planet to explore the projects within, or click the sun to learn more about me.</p>
-    </div>
-    <div class="brands-section">
-      <p class="brands-label" id="brands-label">Brands I've Worked With</p>
-      <div class="brands-wrapper">
-        <div class="brands-track">
-          <img src="brand-logos/casancrem.png" alt="CasanCrem" loading="lazy">
-          <img src="brand-logos/sedal-lookiate.png" alt="Sedal / Unilever" loading="lazy">
-          <img src="brand-logos/C5N.png" alt="C5N" loading="lazy">
-          <img src="brand-logos/directv.png" alt="DirecTV" loading="lazy">
-          <img src="brand-logos/el-perro-en-la-luna.png" alt="El Perro en la Luna" loading="lazy">
-          <img src="brand-logos/entre-rios-gobierno.png" alt="Gobierno de Entre Ríos" loading="lazy">
-          <img src="brand-logos/fundacion-si.png" alt="Fundación Sí" loading="lazy">
-          <img src="brand-logos/gelatina.png" alt="Gelatina" loading="lazy">
-          <img src="brand-logos/kabradepata.png" alt="Kabradepata" loading="lazy">
-          <img src="brand-logos/pauli-bakes.png" alt="Pauli Bakes" loading="lazy">
-          <img src="brand-logos/san.webp" alt="SAN" loading="lazy">
-          <img src="brand-logos/siglo xxi editores.jpg" alt="Siglo XXI Editores" loading="lazy">
-          <img src="brand-logos/TV-Publica.webp" alt="TV Pública" loading="lazy">
-          <img src="brand-logos/xplora-scicomm.png" alt="Xplora" loading="lazy">
-          <img src="brand-logos/anda-calabaza.png" alt="Anda Calabaza" loading="lazy">
-          <!-- Duplicated for seamless loop -->
-          <img src="brand-logos/casancrem.png" alt="CasanCrem" loading="lazy">
-          <img src="brand-logos/sedal-lookiate.png" alt="Sedal / Unilever" loading="lazy">
-          <img src="brand-logos/C5N.png" alt="C5N" loading="lazy">
-          <img src="brand-logos/directv.png" alt="DirecTV" loading="lazy">
-          <img src="brand-logos/el-perro-en-la-luna.png" alt="El Perro en la Luna" loading="lazy">
-          <img src="brand-logos/entre-rios-gobierno.png" alt="Gobierno de Entre Ríos" loading="lazy">
-          <img src="brand-logos/fundacion-si.png" alt="Fundación Sí" loading="lazy">
-          <img src="brand-logos/gelatina.png" alt="Gelatina" loading="lazy">
-          <img src="brand-logos/kabradepata.png" alt="Kabradepata" loading="lazy">
-          <img src="brand-logos/pauli-bakes.png" alt="Pauli Bakes" loading="lazy">
-          <img src="brand-logos/san.webp" alt="SAN" loading="lazy">
-          <img src="brand-logos/siglo xxi editores.jpg" alt="Siglo XXI Editores" loading="lazy">
-          <img src="brand-logos/TV-Publica.webp" alt="TV Pública" loading="lazy">
-          <img src="brand-logos/xplora-scicomm.png" alt="Xplora" loading="lazy">
-          <img src="brand-logos/anda-calabaza.png" alt="Anda Calabaza" loading="lazy">
-        </div>
+    <div class="overlay-panel">
+      <div class="hero-section">
+        <h1 id="hero-name">Nicolás Martorell</h1>
+        <p id="hero-tagline" class="hero-tagline">Software Engineer · Neuroscientist · Researcher · Content Creator</p>
+        <p id="hero-desc" class="hero-desc">Welcome to my portfolio universe. Each planet represents a domain of my work. Click a planet to explore the projects within, or click the sun to learn more about me.</p>
       </div>
     </div>
   </div>
 
   <!-- World View Overlay -->
   <div id="world-overlay" class="overlay">
-    <button id="back-btn" class="back-btn" aria-label="Back to all worlds">
-      <span class="back-arrow">←</span>
-      <span id="back-btn-text">All Worlds</span>
-    </button>
-    <div class="world-info-panel">
-      <h2 id="world-name"></h2>
-      <p id="world-description" class="world-description"></p>
+    <div class="overlay-panel">
+      <button id="back-btn" class="back-btn" aria-label="Back to all worlds">
+        <span class="back-arrow">←</span>
+        <span id="back-btn-text">All Worlds</span>
+      </button>
+      <div class="world-info-panel">
+        <h2 id="world-name"></h2>
+        <p id="world-description" class="world-description"></p>
+      </div>
+      <p id="world-instruction" class="world-instruction">Click a moon to explore a project</p>
     </div>
-    <p id="world-instruction" class="world-instruction">Click a moon to explore a project</p>
+  </div>
+
+  <!-- Brands Footer -->
+  <div id="brands-footer" class="brands-section brands-footer">
+    <p class="brands-label" id="brands-label">Brands I've Worked With</p>
+    <div class="brands-wrapper">
+      <div class="brands-track">
+        <img src="brand-logos/casancrem.png" alt="CasanCrem" loading="lazy">
+        <img src="brand-logos/sedal-lookiate.png" alt="Sedal / Unilever" loading="lazy">
+        <img src="brand-logos/C5N.png" alt="C5N" loading="lazy">
+        <img src="brand-logos/directv.png" alt="DirecTV" loading="lazy">
+        <img src="brand-logos/el-perro-en-la-luna.png" alt="El Perro en la Luna" loading="lazy">
+        <img src="brand-logos/entre-rios-gobierno.png" alt="Gobierno de Entre Ríos" loading="lazy">
+        <img src="brand-logos/fundacion-si.png" alt="Fundación Sí" loading="lazy">
+        <img src="brand-logos/gelatina.png" alt="Gelatina" loading="lazy">
+        <img src="brand-logos/kabradepata.png" alt="Kabradepata" loading="lazy">
+        <img src="brand-logos/pauli-bakes.png" alt="Pauli Bakes" loading="lazy">
+        <img src="brand-logos/san.webp" alt="SAN" loading="lazy">
+        <img src="brand-logos/siglo xxi editores.jpg" alt="Siglo XXI Editores" loading="lazy">
+        <img src="brand-logos/TV-Publica.webp" alt="TV Pública" loading="lazy">
+        <img src="brand-logos/xplora-scicomm.png" alt="Xplora" loading="lazy">
+        <img src="brand-logos/anda-calabaza.png" alt="Anda Calabaza" loading="lazy">
+        <!-- Duplicated for seamless loop -->
+        <img src="brand-logos/casancrem.png" alt="CasanCrem" loading="lazy">
+        <img src="brand-logos/sedal-lookiate.png" alt="Sedal / Unilever" loading="lazy">
+        <img src="brand-logos/C5N.png" alt="C5N" loading="lazy">
+        <img src="brand-logos/directv.png" alt="DirecTV" loading="lazy">
+        <img src="brand-logos/el-perro-en-la-luna.png" alt="El Perro en la Luna" loading="lazy">
+        <img src="brand-logos/entre-rios-gobierno.png" alt="Gobierno de Entre Ríos" loading="lazy">
+        <img src="brand-logos/fundacion-si.png" alt="Fundación Sí" loading="lazy">
+        <img src="brand-logos/gelatina.png" alt="Gelatina" loading="lazy">
+        <img src="brand-logos/kabradepata.png" alt="Kabradepata" loading="lazy">
+        <img src="brand-logos/pauli-bakes.png" alt="Pauli Bakes" loading="lazy">
+        <img src="brand-logos/san.webp" alt="SAN" loading="lazy">
+        <img src="brand-logos/siglo xxi editores.jpg" alt="Siglo XXI Editores" loading="lazy">
+        <img src="brand-logos/TV-Publica.webp" alt="TV Pública" loading="lazy">
+        <img src="brand-logos/xplora-scicomm.png" alt="Xplora" loading="lazy">
+        <img src="brand-logos/anda-calabaza.png" alt="Anda Calabaza" loading="lazy">
+      </div>
+    </div>
   </div>
 
   <!-- 3D Labels Container -->
