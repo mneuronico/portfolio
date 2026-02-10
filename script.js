@@ -424,6 +424,8 @@ let isPointerOverUI = false;
 let uiFocusCount = 0;
 let activePointerId = null;
 let pointerDownTime = 0;
+let uiPointerTarget = null;
+let uiPointerId = null;
 
 // Camera animation
 const cameraAnim = {
@@ -902,6 +904,17 @@ function setupEvents() {
     }
   };
 
+  const uiElements = Array.from($$('.overlay-panel, #brands-footer'));
+  const isPointInside = (rect, x, y) => (
+    x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom
+  );
+  const isPointOverUI = (x, y) => uiElements.some((el) => isPointInside(el.getBoundingClientRect(), x, y));
+  const updateUIFocusFromPoint = (x, y) => {
+    const over = isPointOverUI(x, y);
+    setUIFocus(over);
+    return over;
+  };
+
   $$('.overlay-panel, #brands-footer').forEach(el => {
     el.addEventListener('mouseenter', () => {
       uiFocusCount += 1;
@@ -932,6 +945,15 @@ function setupEvents() {
   };
 
   pointerTarget.addEventListener('pointerdown', (e) => {
+    const overUI = updateUIFocusFromPoint(e.clientX, e.clientY);
+    if (e.pointerType === 'touch' && overUI) {
+      uiPointerId = e.pointerId;
+      uiPointerTarget = document.elementFromPoint(e.clientX, e.clientY);
+      if (uiPointerTarget) {
+        uiPointerTarget = uiPointerTarget.closest('button, a') || uiPointerTarget;
+      }
+      return;
+    }
     if (isPointerOverUI) return;
     if (activePointerId !== null) return;
     activePointerId = e.pointerId;
@@ -946,6 +968,8 @@ function setupEvents() {
   });
 
   pointerTarget.addEventListener('pointermove', (e) => {
+    updateUIFocusFromPoint(e.clientX, e.clientY);
+    if (uiPointerId !== null && e.pointerId === uiPointerId) return;
     if (activePointerId !== e.pointerId && activePointerId !== null) return;
     setMouseFromEvent(e);
 
@@ -975,6 +999,15 @@ function setupEvents() {
   });
 
   pointerTarget.addEventListener('pointerup', (e) => {
+    updateUIFocusFromPoint(e.clientX, e.clientY);
+    if (uiPointerId !== null && e.pointerId === uiPointerId) {
+      if (uiPointerTarget && typeof uiPointerTarget.click === 'function') {
+        uiPointerTarget.click();
+      }
+      uiPointerId = null;
+      uiPointerTarget = null;
+      return;
+    }
     if (activePointerId !== e.pointerId && activePointerId !== null) return;
     setMouseFromEvent(e);
     const tapDuration = performance.now() - pointerDownTime;
@@ -993,35 +1026,27 @@ function setupEvents() {
     pointerDownPos = null;
     isDragging = false;
     activePointerId = null;
+    uiPointerId = null;
+    uiPointerTarget = null;
     mouse.set(-999, -999);
     clearHover();
+    setUIFocus(false);
   });
 
   pointerTarget.addEventListener('pointerleave', () => {
     pointerDownPos = null;
     isDragging = false;
     activePointerId = null;
+    uiPointerId = null;
+    uiPointerTarget = null;
     mouse.set(-999, -999);
     clearHover();
+    setUIFocus(false);
   });
 
   window.addEventListener('pointermove', (e) => {
-    if (activePointerId !== null) return;
-    const x = e.clientX;
-    const y = e.clientY;
-    const uiElements = Array.from($$('.overlay-panel, #brands-footer'));
-    const over = uiElements.some((el) => {
-      const rect = el.getBoundingClientRect();
-      return x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
-    });
-    if (over !== isPointerOverUI) {
-      isPointerOverUI = over;
-      if (over) {
-        document.body.classList.add('ui-focus');
-      } else {
-        document.body.classList.remove('ui-focus');
-      }
-    }
+    if (activePointerId !== null || uiPointerId !== null) return;
+    updateUIFocusFromPoint(e.clientX, e.clientY);
   });
 
   // Keyboard
